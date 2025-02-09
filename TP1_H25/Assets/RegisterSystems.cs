@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Systems;
 
 public class RegisterSystems
 {
@@ -7,7 +8,11 @@ public class RegisterSystems
         // determine order of systems to add
         var toRegister = new List<ISystem>();
         
-        // Add your systems here
+        // Add your systems here 
+        toRegister.Add(new MovementSystem());
+        toRegister.Add(new CollisionSystem());
+        toRegister.Add(new ColorSystem());
+        toRegister.Add(new ExplosionSystem());
 
         return toRegister;
     }
