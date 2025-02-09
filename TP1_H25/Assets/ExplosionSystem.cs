@@ -1,6 +1,7 @@
 using UnityEngine;
 using Components;
 using System.Collections.Generic;
+using UnityEngine.Windows.Speech;
 
 namespace Systems {
     public class ExplosionSystem : ISystem {
@@ -9,11 +10,19 @@ namespace Systems {
         public void UpdateSystem() {
             List<Entity> entities = EntityManager.Instance.GetAllEntities();
             List<Entity> toExplode = new List<Entity>();
-            
+
+            var config = ECSController.Instance?.Config;
+
+            if (config == null)
+            {
+                Debug.LogError("ECSController.Instance or Config is missing!");
+                return;
+            }
+
             foreach (Entity e in entities) {
-                if (e.HasComponent<SizeComponent>() && e.HasComponent<ExplosionFlagComponent>()) {
+                if (e.HasComponent<SizeComponent>()) {
                     SizeComponent size = e.GetComponent<SizeComponent>();
-                    if (size.size >= 4) {
+                    if (size.size >= config.explosionSize && e.GetComponent<CircleTypeComponent>().circleType == CircleType.Dynamic) {
                         toExplode.Add(e);
                     }
                 }

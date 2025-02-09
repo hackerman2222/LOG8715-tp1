@@ -26,7 +26,7 @@ public class ECSTestSpawner : MonoBehaviour
         Vector2[] startPositions = {
             new Vector2(leftBound, bottomBound),
             new Vector2(rightBound, bottomBound),
-            new Vector2(bottomLeft.x + 50f, topRight.y - 50f),
+            new Vector2(bottomLeft.x + 30f, topRight.y - 10f),
             new Vector2(rightBound, topBound)
         };
 
@@ -38,7 +38,7 @@ public class ECSTestSpawner : MonoBehaviour
             new Vector2(-3, 6)
         };
 
-        int[] sizes = { 3, 6, 9, 4 }; // Random sizes between 1 and 10
+        int[] sizes = { 9, 5, 9, 7 }; // Random sizes between 1 and 10
 
         for (int i = 0; i < 4; i++)
         {
