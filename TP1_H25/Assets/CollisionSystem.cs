@@ -71,16 +71,23 @@ namespace Systems {
 
                         // Destroy entity if size becomes 0
                         if (size1.size <= 0) {
-                            EntityManager.Instance.DestroyEntity(e1.Id);
                             ECSController.Instance.DestroyShape(e1.Id);
+                            EntityManager.Instance.DestroyEntity(e1.Id);
+                        } else
+                        {
+                            ECSController.Instance.UpdateShapeSize(e1.Id, size1.size);
+                            e1.SetComponent(size1);
                         }
-                        if (size2.size <= 0) {
-                            EntityManager.Instance.DestroyEntity(e2.Id);
+                        if (size2.size <= 0)
+                        {
                             ECSController.Instance.DestroyShape(e2.Id);
+                            EntityManager.Instance.DestroyEntity(e2.Id);
                         }
-                        
-                        e1.SetComponent(size1);
-                        e2.SetComponent(size2);
+                        else 
+                        {
+                            ECSController.Instance.UpdateShapeSize(e2.Id, size2.size);
+                            e2.SetComponent(size2);
+                        }
                     }
                 }
             }
