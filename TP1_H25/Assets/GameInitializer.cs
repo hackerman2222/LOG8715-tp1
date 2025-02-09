@@ -26,7 +26,7 @@ public class ECSTestSpawner : MonoBehaviour
         Vector2[] startPositions = {
             new Vector2(leftBound, bottomBound),
             new Vector2(rightBound, bottomBound),
-            new Vector2(leftBound, topBound),
+            new Vector2(bottomLeft.x + 50f, topRight.y - 50f),
             new Vector2(rightBound, topBound)
         };
 
@@ -46,7 +46,6 @@ public class ECSTestSpawner : MonoBehaviour
 
             if (velocities[i] != Vector2.zero)
             {
-                entity.SetComponent(new VelocityComponent(velocities[i]));
                 entity.SetComponent(new CircleTypeComponent(CircleType.Dynamic));
 
             }
@@ -54,7 +53,7 @@ public class ECSTestSpawner : MonoBehaviour
             {
                 entity.SetComponent(new CircleTypeComponent(CircleType.Static));
             }
-
+            entity.SetComponent(new VelocityComponent(velocities[i]));
             entity.SetComponent(new PositionComponent(startPositions[i]));
             entity.SetComponent(new SizeComponent(sizes[i]));
             entity.SetComponent(new CollisionCounterComponent(0));

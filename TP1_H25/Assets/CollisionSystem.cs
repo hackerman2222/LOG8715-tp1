@@ -32,24 +32,24 @@ namespace Systems {
                     
                     if (distance < minDistance) {
                         // Apply collision physics using CollisionUtility
-                        CollisionResult result = CollisionUtility.CalculateCollision(
-                            pos1.Position, e1.HasComponent<VelocityComponent>() ? e1.GetComponent<VelocityComponent>().Velocity : Vector2.zero, size1.size,
-                            pos2.Position, e2.HasComponent<VelocityComponent>() ? e2.GetComponent<VelocityComponent>().Velocity : Vector2.zero, size2.size);
-                        
-                        if (result != null) {
-                            pos1.Position = result.position1;
-                            pos2.Position = result.position2;
-                            
-                            e1.SetComponent(pos1);
-                            e2.SetComponent(pos2);
-                            
-                            if (e1.HasComponent<VelocityComponent>()) {
+                        if (e1.HasComponent<VelocityComponent>() && e2.HasComponent<VelocityComponent>())
+                        {
+                            CollisionResult result = CollisionUtility.CalculateCollision(
+                                pos1.Position, e1.GetComponent<VelocityComponent>().Velocity, size1.size,
+                                pos2.Position, e2.GetComponent<VelocityComponent>().Velocity, size2.size);
+
+                            if (result != null)
+                            {
+                                pos1.Position = result.position1;
+                                pos2.Position = result.position2;
+
+                                e1.SetComponent(pos1);
+                                e2.SetComponent(pos2);
+
                                 VelocityComponent vel1 = e1.GetComponent<VelocityComponent>();
                                 vel1.Velocity = result.velocity1;
                                 e1.SetComponent(vel1);
-                            }
-                            
-                            if (e2.HasComponent<VelocityComponent>()) {
+
                                 VelocityComponent vel2 = e2.GetComponent<VelocityComponent>();
                                 vel2.Velocity = result.velocity2;
                                 e2.SetComponent(vel2);
@@ -57,6 +57,10 @@ namespace Systems {
                         }
                         
                         // Handle size changes
+                        if (e1.GetComponent<CircleTypeComponent>().circleType == CircleType.Static || e2.GetComponent<CircleTypeComponent>().circleType == CircleType.Static)
+                        {
+                            continue;
+                        }
                         if (size1.size > size2.size) {
                             size1.size += 1;
                             size2.size -= 1;
@@ -64,21 +68,15 @@ namespace Systems {
                             size2.size += 1;
                             size1.size -= 1;
                         }
-                        
-                        // Ensure static circles do not change size
-                        if (e1.HasComponent<CircleTypeComponent>() && e1.GetComponent<CircleTypeComponent>().circleType == CircleType.Static) {
-                            size1.size -= 1;
-                        }
-                        if (e2.HasComponent<CircleTypeComponent>() && e2.GetComponent<CircleTypeComponent>().circleType == CircleType.Static) {
-                            size2.size -= 1;
-                        }
-                        
+
                         // Destroy entity if size becomes 0
                         if (size1.size <= 0) {
                             EntityManager.Instance.DestroyEntity(e1.Id);
+                            ECSController.Instance.DestroyShape(e1.Id);
                         }
                         if (size2.size <= 0) {
                             EntityManager.Instance.DestroyEntity(e2.Id);
+                            ECSController.Instance.DestroyShape(e2.Id);
                         }
                         
                         e1.SetComponent(size1);
