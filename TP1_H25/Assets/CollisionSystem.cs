@@ -22,8 +22,10 @@ namespace Systems {
                     
                     PositionComponent pos1 = e1.GetComponent<PositionComponent>();
                     SizeComponent size1 = e1.GetComponent<SizeComponent>();
+                    CollisionCounterComponent counter1 = e1.GetComponent<CollisionCounterComponent>();
                     PositionComponent pos2 = e2.GetComponent<PositionComponent>();
                     SizeComponent size2 = e2.GetComponent<SizeComponent>();
+                    CollisionCounterComponent counter2 = e2.GetComponent<CollisionCounterComponent>();
                     
                     float radius1 = size1.size / 2f;
                     float radius2 = size2.size / 2f;
@@ -53,6 +55,14 @@ namespace Systems {
                                 VelocityComponent vel2 = e2.GetComponent<VelocityComponent>();
                                 vel2.Velocity = result.velocity2;
                                 e2.SetComponent(vel2);
+
+                                if (size1.size == size2.size)
+                                {
+                                    counter1.CollisionCount += 1;
+                                    counter2.CollisionCount += 1;
+                                    e1.SetComponent(counter1);
+                                    e2.SetComponent(counter2);
+                                }
                             }
                         }
                         

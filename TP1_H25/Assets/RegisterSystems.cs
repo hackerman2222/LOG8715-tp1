@@ -11,6 +11,7 @@ public class RegisterSystems
         // Add your systems here 
         toRegister.Add(new MovementSystem());
         toRegister.Add(new CollisionSystem());
+        toRegister.Add(new ProtectionSystem());
         toRegister.Add(new ColorSystem());
         toRegister.Add(new ExplosionSystem());
 
