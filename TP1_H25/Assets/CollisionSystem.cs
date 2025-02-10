@@ -57,20 +57,6 @@ namespace Systems {
                                 VelocityComponent vel2 = e2.GetComponent<VelocityComponent>();
                                 vel2.Velocity = result.velocity2;
                                 e2.SetComponent(vel2);
-
-                                if (size1.size == size2.size)
-                                {
-                                    if (e1.HasComponent<ProtectionComponent>() && e1.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
-                                    {
-                                        counter1.CollisionCount += 1;
-                                        e1.SetComponent(counter1);
-                                    }
-                                    if (e2.HasComponent<ProtectionComponent>() && e2.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
-                                    {
-                                        counter2.CollisionCount += 1;
-                                        e2.SetComponent(counter2);
-                                    }
-                                }
                             }
                         }
 
@@ -94,12 +80,49 @@ namespace Systems {
                         {
                             continue;
                         }
-                        if (size1.size > size2.size) {
-                            size1.size += 1;
-                            size2.size -= 1;
-                        } else if (size2.size > size1.size) {
-                            size2.size += 1;
-                            size1.size -= 1;
+                        if (e1.GetComponent<ProtectionComponent>().IsProtected && e2.GetComponent<ProtectionComponent>().IsProtected) 
+                        {
+                            continue; 
+                        }
+
+                        if (size1.size == size2.size && size1.size == ECSController.Instance.Config.protectionSize)
+                        {
+                            if (e1.HasComponent<ProtectionComponent>() && e1.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
+                            {
+                                counter1.CollisionCount += 1;
+                                e1.SetComponent(counter1);
+                            }
+                            if (e2.HasComponent<ProtectionComponent>() && e2.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
+                            {
+                                counter2.CollisionCount += 1;
+                                e2.SetComponent(counter2);
+                            }
+                        }
+
+                        if (e1.GetComponent<ProtectionComponent>().IsProtected)
+                        {
+                            if (size2.size > size1.size)
+                            {
+                                size2.size -= 1;
+                            }
+                        } else if (e2.GetComponent<ProtectionComponent>().IsProtected)
+                        {
+                            if (size1.size > size2.size)
+                            {
+                                size1.size -= 1;
+                            }
+                        } else
+                        {
+                            if (size1.size > size2.size)
+                            {
+                                size1.size += 1;
+                                size2.size -= 1;
+                            }
+                            else if (size2.size > size1.size)
+                            {
+                                size2.size += 1;
+                                size1.size -= 1;
+                            }
                         }
 
                         // Destroy entity if size becomes 0

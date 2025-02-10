@@ -16,7 +16,7 @@ namespace Systems {
 
             foreach (Entity e in entities)
             {
-                Color newColor = Color.white;
+                Color newColor = new();
                 bool assigned = false;
 
                 // Static circles  Red
@@ -64,13 +64,6 @@ namespace Systems {
                 }
 
                 // Just exploded  Pink
-                if (!assigned && e.HasComponent<ExplosionFlagComponent>())
-                {
-                    newColor = Color.magenta;
-                    assigned = true;
-                }
-
-                // Newly created from an explosion  Pink
                 if (!assigned && e.HasComponent<ExplosionFlagComponent>())
                 {
                     newColor = Color.magenta;
