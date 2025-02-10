@@ -65,7 +65,9 @@ namespace Systems {
                                 }
                             }
                         }
-                        
+
+                        e1.SetComponent(new CollisionFlagComponent(true));
+                        e2.SetComponent(new CollisionFlagComponent(true));
                         // Handle size changes
                         if (e1.GetComponent<CircleTypeComponent>().circleType == CircleType.Static || e2.GetComponent<CircleTypeComponent>().circleType == CircleType.Static)
                         {
@@ -97,6 +99,13 @@ namespace Systems {
                         {
                             ECSController.Instance.UpdateShapeSize(e2.Id, size2.size);
                             e2.SetComponent(size2);
+                        }
+                        foreach (Entity e in entities)
+                        {
+                            if (e.HasComponent<CollisionFlagComponent>())
+                            {
+                                e.RemoveComponent<CollisionFlagComponent>();
+                            }
                         }
                     }
                 }

@@ -6,7 +6,7 @@ namespace Components
 {
     public class Entity
     {
-        public uint Id { get; private set;}
+        public uint Id { get; private set; }
 
         private Dictionary<Type, object> components = new Dictionary<Type, object>();
 
@@ -14,7 +14,7 @@ namespace Components
         {
             Id = id;
         }
-        
+
         // Vérifie si l'entité possède un composant de type T
         public bool HasComponent<T>()
         {
@@ -34,6 +34,14 @@ namespace Components
         {
             components[typeof(T)] = component;
         }
+
+        // Supprime un composant
+        public void RemoveComponent<T>()
+        {
+            if (components.ContainsKey(typeof(T)))
+            {
+                components.Remove(typeof(T));
+            }
+        }
     }
-    
 }
