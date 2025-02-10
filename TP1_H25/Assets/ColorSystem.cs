@@ -1,9 +1,6 @@
 using UnityEngine;
 using Components;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using System;
-using UnityEditor.Experimental.GraphView;
 
 namespace Systems {
     public class ColorSystem : ISystem
@@ -16,7 +13,8 @@ namespace Systems {
 
             foreach (Entity e in entities)
             {
-                Color newColor = new();
+                ColorComponent color = e.GetComponent<ColorComponent>();
+                Color newColor = color.color;
                 bool assigned = false;
 
                 // Static circles  Red
@@ -76,7 +74,8 @@ namespace Systems {
                     newColor = new Color(0f, 0f, 0.55f);
                     assigned = true;
                 }
-
+                color.color = newColor;
+                e.SetComponent(color);
                 ECSController.Instance.UpdateShapeColor(e.Id, newColor);
             }
         }

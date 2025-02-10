@@ -80,6 +80,8 @@ public class ECSTestSpawner : MonoBehaviour
         entity.SetComponent(new CircleTypeComponent(velocity == Vector2.zero ? CircleType.Static : CircleType.Dynamic));
         entity.SetComponent(new CollisionCounterComponent(0));
         entity.SetComponent(new ProtectionComponent(false,0f,0f));
+        entity.SetComponent(new RewindComponent(90));
+        entity.SetComponent(new ColorComponent(new()));
 
         testEntities.Add(entity);
 

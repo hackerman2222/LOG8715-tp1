@@ -1,7 +1,6 @@
 using UnityEngine;
 using Components;
 using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Systems
 {
@@ -58,6 +57,10 @@ namespace Systems
                     newEntity.SetComponent(new ExplosionFlagComponent(true)); // Set explosion flag ONLY on newly created entities
                     newEntity.SetComponent(new CollisionCounterComponent(0));
                     newEntity.SetComponent(new ProtectionComponent(false, 0f, 0f));
+                    newEntity.SetComponent(new RewindComponent(90));
+                    newEntity.SetComponent(new ColorComponent(new()));
+                    newEntity.SetComponent(new DeleteFlagComponent(true));
+
 
                     ECSController.Instance.CreateShape(newEntity.Id, newSize);
                     newEntities.Add(newEntity); // Track newly created entities for flag removal
