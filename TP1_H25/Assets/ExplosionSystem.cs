@@ -1,7 +1,6 @@
 using UnityEngine;
 using Components;
 using System.Collections.Generic;
-using UnityEngine.Windows.Speech;
 
 namespace Systems
 {
@@ -13,9 +12,9 @@ namespace Systems
         {
             List<Entity> entities = EntityManager.Instance.GetAllEntities();
             List<Entity> toExplode = new List<Entity>();
+            List<Entity> newEntities = new List<Entity>();
 
             var config = ECSController.Instance?.Config;
-
             if (config == null)
             {
                 Debug.LogError("ECSController.Instance or Config is missing!");
@@ -55,22 +54,31 @@ namespace Systems
                     newEntity.SetComponent(new VelocityComponent(dir.x * 2f, dir.y * 2f));
                     newEntity.SetComponent(new SizeComponent(newSize));
                     newEntity.SetComponent(new CircleTypeComponent(CircleType.Dynamic));
-                    newEntity.SetComponent(new CollisionCounterComponent(0));
                     newEntity.SetComponent(new ExplosionFlagComponent(true)); // Set explosion flag ONLY on newly created entities
 
                     ECSController.Instance.CreateShape(newEntity.Id, newSize);
+                    newEntities.Add(newEntity); // Track newly created entities for flag removal
                 }
 
                 ECSController.Instance.DestroyShape(e.Id);
                 EntityManager.Instance.DestroyEntity(e.Id);
+            }
 
-                // Remove explosion flags after one frame using Entity.RemoveComponent
-                foreach (Entity ent in entities)
+            // Remove explosion flags on newly created entities in the next frame
+            if (newEntities.Count > 0)
+            {
+                ECSController.Instance.StartCoroutine(RemoveExplosionFlagsNextFrame(newEntities));
+            }
+        }
+
+        private System.Collections.IEnumerator RemoveExplosionFlagsNextFrame(List<Entity> entities)
+        {
+            yield return null; // Wait for next frame
+            foreach (Entity e in entities)
+            {
+                if (e.HasComponent<ExplosionFlagComponent>())
                 {
-                    if (ent.HasComponent<ExplosionFlagComponent>())
-                    {
-                        ent.RemoveComponent<ExplosionFlagComponent>();
-                    }
+                    e.RemoveComponent<ExplosionFlagComponent>();
                 }
             }
         }

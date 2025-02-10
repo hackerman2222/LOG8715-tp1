@@ -43,7 +43,7 @@ public class ECSTestSpawner : MonoBehaviour
         Vector2[] velocities = {
             new Vector2(6, 3),
             new Vector2(-6, -3),
-            new Vector2(3, -6),
+            new Vector2(0, 0),
             new Vector2(-3, 6)
         };
 
@@ -74,11 +74,12 @@ public class ECSTestSpawner : MonoBehaviour
     {
         Entity entity = EntityManager.Instance.CreateEntity();
 
-        entity.SetComponent(new PositionComponent(position.x, position.y));
-        entity.SetComponent(new VelocityComponent(velocity.x, velocity.y));
+        entity.SetComponent(new PositionComponent(position));
+        entity.SetComponent(new VelocityComponent(velocity));
         entity.SetComponent(new SizeComponent(size));
-        entity.SetComponent(new CircleTypeComponent(CircleType.Dynamic));
+        entity.SetComponent(new CircleTypeComponent(velocity == Vector2.zero ? CircleType.Static : CircleType.Dynamic));
         entity.SetComponent(new CollisionCounterComponent(0));
+        entity.SetComponent(new ProtectionComponent(false,0f,0f));
 
         testEntities.Add(entity);
 

@@ -5,7 +5,9 @@ using System.Collections.Generic;
 namespace Systems {
     public class CollisionSystem : ISystem {
         public string Name => "CollisionSystem";
-        
+
+        private List<Entity> entitiesToClear = new();
+
         public void UpdateSystem() {
             List<Entity> entities = EntityManager.Instance.GetAllEntities();
             int count = entities.Count;
@@ -58,16 +60,35 @@ namespace Systems {
 
                                 if (size1.size == size2.size)
                                 {
-                                    counter1.CollisionCount += 1;
-                                    counter2.CollisionCount += 1;
-                                    e1.SetComponent(counter1);
-                                    e2.SetComponent(counter2);
+                                    if (e1.HasComponent<ProtectionComponent>() && e1.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
+                                    {
+                                        counter1.CollisionCount += 1;
+                                        e1.SetComponent(counter1);
+                                    }
+                                    if (e2.HasComponent<ProtectionComponent>() && e2.GetComponent<ProtectionComponent>().CooldownTimeRemaining == 0f)
+                                    {
+                                        counter2.CollisionCount += 1;
+                                        e2.SetComponent(counter2);
+                                    }
                                 }
                             }
                         }
 
-                        e1.SetComponent(new CollisionFlagComponent(true));
-                        e2.SetComponent(new CollisionFlagComponent(true));
+                        if (e1.GetComponent<CircleTypeComponent>().circleType != CircleType.Static)
+                        {
+                            e1.SetComponent(new CollisionFlagComponent(true));
+                            entitiesToClear.Add(e1);
+                        }
+                        if (e2.GetComponent<CircleTypeComponent>().circleType != CircleType.Static)
+                        {
+                            e2.SetComponent(new CollisionFlagComponent(true));
+                            entitiesToClear.Add(e2);
+                        }
+
+                        if (entitiesToClear.Count > 0)
+                        {
+                            ECSController.Instance.StartCoroutine(RemoveCollisionFlags(entitiesToClear));
+                        }
                         // Handle size changes
                         if (e1.GetComponent<CircleTypeComponent>().circleType == CircleType.Static || e2.GetComponent<CircleTypeComponent>().circleType == CircleType.Static)
                         {
@@ -100,14 +121,19 @@ namespace Systems {
                             ECSController.Instance.UpdateShapeSize(e2.Id, size2.size);
                             e2.SetComponent(size2);
                         }
-                        foreach (Entity e in entities)
-                        {
-                            if (e.HasComponent<CollisionFlagComponent>())
-                            {
-                                e.RemoveComponent<CollisionFlagComponent>();
-                            }
-                        }
                     }
+                }
+            }
+        }
+
+        private System.Collections.IEnumerator RemoveCollisionFlags(List<Entity> entities)
+        {
+            yield return null; // Wait for next frame
+            foreach (Entity e in entities)
+            {
+                if (e.HasComponent<CollisionFlagComponent>())
+                {
+                    e.RemoveComponent<CollisionFlagComponent>();
                 }
             }
         }
