@@ -1,6 +1,8 @@
 using UnityEngine;
 using Components;
 using System.Collections.Generic;
+using System.Drawing;
+using UnityEngine.UIElements;
 
 public class GameInitialiser2 : MonoBehaviour
 {
@@ -36,19 +38,14 @@ public class GameInitialiser2 : MonoBehaviour
                 return;
             }
 
-            entity.SetComponent(new PositionComponent(shapeConfig.initialPosition.x, shapeConfig.initialPosition.y));
-            if (shapeConfig.initialVelocity != Vector2.zero)
-            {
-                entity.SetComponent(new VelocityComponent(shapeConfig.initialVelocity.x, shapeConfig.initialVelocity.y));
-                entity.SetComponent(new CircleTypeComponent(CircleType.Dynamic));
-
-            }
-            else
-            {
-                entity.SetComponent(new CircleTypeComponent(CircleType.Static));
-            }
+            entity.SetComponent(new PositionComponent(shapeConfig.initialPosition));
+            entity.SetComponent(new VelocityComponent(shapeConfig.initialVelocity));
             entity.SetComponent(new SizeComponent(shapeConfig.initialSize));
+            entity.SetComponent(new CircleTypeComponent(shapeConfig.initialVelocity == Vector2.zero ? CircleType.Static : CircleType.Dynamic));
             entity.SetComponent(new CollisionCounterComponent(0));
+            entity.SetComponent(new ProtectionComponent(false, 0f, 0f));
+            entity.SetComponent(new RewindComponent(90));
+            entity.SetComponent(new ColorComponent(new()));
 
             testEntities.Add(entity);
 
